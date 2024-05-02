@@ -3,6 +3,6 @@ export interface Msgs{
     senderId: string;
     receiverId: string;
     content: string;
-    //timestamp: Date;
+    timestamp: string;
     mine: boolean
 }

@@ -1,23 +1,45 @@
-<div class="container-fluid">
-    <div class="row">
-      <div class="col-6 pl-4">
-        Welcome <b>{{ webSocketService.userData?.name }}</b>
-      </div>
-      <div class="col-6 text-right" style="cursor: pointer;" (click)="logout()">
-        Logout
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Chat app</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/home">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Group</a>
+        </li>
+        <!-- Add more navbar items as needed -->
+      </ul>
+      <div class="dropdown" (click)="toggleDropdown($event)">
+        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="Avatar" class="rounded-circle" style="width: 30px;">
+        <span class="ms-1">{{ webSocketService.userData?.name }}</span>
+        <ul class="dropdown-menu" [ngClass]="{ 'show': isDropdownOpen }">
+          <li><a class="dropdown-item" href="#">Profile</a></li>
+          <li><a class="dropdown-item" href="#">Settings</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" (click)="logout()">Logout</a></li>
+        </ul>
       </div>
     </div>
+  </div>
+</nav>
+
+<!-- <div class="container-fluid">
+    <div class="row">
+       -->
+    <!-- </div>
       <div class="row">
-      <!-- List of Users -->
       <div class="col-12 col-sm-3 offset-sm-3 mt-4">
-        <!-- Online Users -->
         <label>Online Users</label>
         <ul class="list-group" *ngFor="let user of users">
           <li class="list-group-item" style="cursor: pointer;" (click)="selectedUser = user">{{ user.name }}</li>
         </ul>
       </div>
   
-      <!-- Chat Box -->
       <div class="col-12 col-sm-3 mt-4">
         <label><b>{{ selectedUser?.name }}</b></label>
         <div id="chatBox">
@@ -34,5 +56,91 @@
           <button id="sendBtn" class="btn btn-primary" [disabled]="selectedUser == null" (click)="sendMsgInv()">Send</button>
         </div>
       </div>
+    </div> -->
+<!-- </div> -->
+
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<div class="container">
+<div class="row clearfix">
+    <div class="col-lg-12">
+        <div class="card chat-app">
+            <div id="plist" class="people-list">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                    <input type="text" class="form-control" placeholder="Search user...">
+                </div>
+                <ul class="list-unstyled chat-list mt-2 mb-0" *ngFor="let user of users">
+                    <li class="clearfix" [class.active]="user === selectedUser" (click)="selectUser(user)">
+                        <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
+                        <div class="about">
+                            <div class="name">{{ user.name }}</div>
+                            <div class="status"> <i class="fa fa-circle online"></i> online </div>                                            
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="chat">
+                <div class="chat-header clearfix">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info" *ngIf="selectedUser?.name">
+                                <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
+                            </a>
+                            <div class="chat-about" *ngIf="selectedUser?.name">
+                                <h6 class="m-b-0">{{ selectedUser?.name }}</h6>
+                                <small>Last seen: now</small>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 hidden-sm text-right">
+                            <a href="javascript:void(0);" class="btn btn-outline-secondary"><i class="fa fa-phone"></i></a>
+                            <a href="javascript:void(0);" class="btn btn-outline-primary"><i class="fa fa-video-camera"></i></a>
+                            <a href="javascript:void(0);" class="btn btn-outline-info"><i class="fa fa-cogs"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-history" #msgBox id="msgBox">
+                    <ul class="m-b-0" *ngFor="let message of selectedUser?.msgs">
+                        <li class="clearfix" *ngIf="!message.mine">
+                            <div class="message-data text-right">
+                                <span class="message-data-time">{{message.timestamp | chatHistoryDatePipe}}</span>
+                                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar">
+                            </div>
+                            <div class="message other-message float-right"> {{ message.content }} </div>
+                        </li>
+                        <li class="clearfix" *ngIf="message.mine">
+                            <div class="message-data">
+                                <span class="message-data-time">{{message.timestamp | chatHistoryDatePipe}}</span>
+                            </div>
+                            <div class="message my-message"> {{ message.content }} </div>                                    
+                        </li>                               
+                        <!-- <li class="clearfix">
+                            <div class="message-data">
+                                <span class="message-data-time">10:15 AM, Today</span>
+                            </div>
+                            <div class="message my-message">Project has been already finished and I have results to show you.</div>
+                        </li>
+                        <li class="clearfix">
+                          <div class="message-data text-right">
+                              <span class="message-data-time">10:10 AM, Today</span>
+                              <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar">
+                          </div>
+                          <div class="message other-message float-right"> Hi Aiden, how are you? How is the project coming along? </div>
+                      </li>-->
+                    </ul>
+                </div>
+                <div class="chat-message clearfix">
+                    <div class="input-group mb-0">
+                        <div class="input-group">
+                            <button type="button" class="fa fa-send btn btn-primary" [disabled]="selectedUser.name === ''" (click)="sendMsgInv()"></button>
+                            <input [(ngModel)]="msg" type="text" class="form-control" placeholder="Enter message here...">
+                            <button type="button" class="fa fa-paperclip btn" [disabled]="selectedUser.name === ''"></button>                                    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 </div>

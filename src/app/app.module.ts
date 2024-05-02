@@ -6,6 +6,7 @@ import { WebSocketService } from './shared/services/web-socket.service';
 import { FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { AuthComponent } from './auth/auth.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
 @NgModule({
   declarations: [
@@ -16,9 +17,10 @@ import { AuthComponent } from './auth/auth.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    BrowserAnimationsModule,
     ToastrModule.forRoot({
       enableHtml: true,
-      timeOut: 70000,
+      timeOut: 3000,
       positionClass: 'toast-top-right',
       preventDuplicates: false,
     })
